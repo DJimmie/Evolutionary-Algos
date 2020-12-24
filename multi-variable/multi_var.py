@@ -10,18 +10,18 @@ import numpy as np
 
 ## Constants
 
-VAR_NUM_BITS=4
+VAR_NUM_BITS=8
 NUM_VARS=6
 NUM_GENES=NUM_BITS=VAR_NUM_BITS*NUM_VARS
-POP_SIZE=40
-P_MUTATION=.075
+POP_SIZE=50
+P_MUTATION=.05
 P_CROSSOVER=.7
-GEN_COUNT=100
+GEN_COUNT=20
 OUTPUT_FILE_LIMIT=100
 XMIN=[30,25,180,2850,550,600]
 XMAX=[700,500,2500,4000,1650,1200]
 VARIABLE_NAME='TBD'
-OPTIMIZATION='min'  #Option----> 'max'
+OPTIMIZATION='max'  #Option----> 'max'
 
 Variable_avg=[]
 values_list=[]
@@ -103,19 +103,21 @@ def fitness_score(x):
     ## Scenerio: Find the min or max value of y=f(x) over the range of [XMIN,XMAX]
    
 
-    TARGET=4000
+    TARGET=sum(XMAX[0:NUM_VARS])
     y = sum(scaled_var_list)
 
     if OPTIMIZATION=='max':
-        criteria=any([y>TARGET,(scaled_var_list[0]+scaled_var_list[1]>500)])
+        discret_spend=scaled_var_list[5]/y
+        criteria=any([y>TARGET,(scaled_var_list[0]+scaled_var_list[1]>500),discret_spend>.025])
         if criteria:
             y=0
         # if y>TARGET :
         #     y=0
     elif(OPTIMIZATION=='min'):
-        criteria=any([y>TARGET])
-        if criteria:
-            y=abs(TARGET-y)
+        y=abs(TARGET-y)
+        # criteria=any([y>TARGET])
+        # if criteria:
+        #     y=abs(TARGET-y)
 
     
     return y
